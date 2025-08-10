@@ -25,65 +25,70 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Navbar5 = () => {
-  const features = [
+  const movies = [
     {
-      title: "Dashboard",
-      description: "Overview of your activity",
-      href: "#",
+      title: "Now Playing",
+      description: "See what's currently playing in theaters",
+      href: "/movies/now-playing",
     },
     {
-      title: "Analytics",
-      description: "Track your performance",
-      href: "#",
+      title: "Popular",
+      description: "Check out the most popular movies right now",
+      href: "/movies/popular",
     },
     {
-      title: "Settings",
-      description: "Configure your preferences",
-      href: "#",
+      title: "Top Rated",
+      description: "Discover the best movies",
+      href: "/movies/top-rated",
     },
     {
-      title: "Integrations",
-      description: "Connect with other tools",
-      href: "#",
-    },
-    {
-      title: "Storage",
-      description: "Manage your files",
-      href: "#",
-    },
-    {
-      title: "Support",
-      description: "Get help when needed",
-      href: "#",
+      title: "Upcoming",
+      description: "Stay tuned for new releases",
+      href: "/movies/upcoming",
     },
   ];
+
+  const router = useRouter();
+
+  const handleSignInClick = () => {
+    router.push("/signin");
+  };
+
+  const handleStartClick = () => {
+    router.push("/signup");
+  };
 
   return (
     <section className="py-4">
       <div className="container">
         <nav className="flex items-center justify-between">
-          <a
-            href="https://www.shadcnblocks.com"
+          <Link
+            href="/"
             className="flex items-center gap-2"
           >
-            <img
-              src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"
+            <Image
+              src="/logo.png"
+              width={32}
+              height={32}
               className="max-h-8"
               alt="Shadcn UI Navbar"
             />
             <span className="text-lg font-semibold tracking-tighter">
-              Shadcnblocks.com
+              acevision.com
             </span>
-          </a>
+          </Link>
           <NavigationMenu className="hidden lg:block">
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuTrigger>Features</NavigationMenuTrigger>
+                <NavigationMenuTrigger>Movies</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <div className="grid w-[600px] grid-cols-2 p-3">
-                    {features.map((feature, index) => (
+                    {movies.map((feature, index) => (
                       <NavigationMenuLink
                         href={feature.href}
                         key={index}
@@ -129,8 +134,8 @@ const Navbar5 = () => {
             </NavigationMenuList>
           </NavigationMenu>
           <div className="hidden items-center gap-4 lg:flex">
-            <Button variant="outline">Sign in</Button>
-            <Button>Start for free</Button>
+            <Button onClick={handleSignInClick} variant="outline">Sign in</Button>
+            <Button onClick={handleStartClick}>Start for free</Button>
           </div>
           <Sheet>
             <SheetTrigger asChild className="lg:hidden">
@@ -141,30 +146,32 @@ const Navbar5 = () => {
             <SheetContent side="top" className="max-h-screen overflow-auto">
               <SheetHeader>
                 <SheetTitle>
-                  <a
-                    href="https://www.shadcnblocks.com"
+                  <Link
+                    href="/"
                     className="flex items-center gap-2"
                   >
-                    <img
-                      src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"
+                    <Image
+                      src="/logo.png"
+                      width={32}
+                      height={32}
                       className="max-h-8"
                       alt="Shadcn UI Navbar"
                     />
                     <span className="text-lg font-semibold tracking-tighter">
-                      Shadcnblocks.com
+                      acevision.id
                     </span>
-                  </a>
+                  </Link>
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col p-4">
                 <Accordion type="single" collapsible className="mt-4 mb-2">
                   <AccordionItem value="solutions" className="border-none">
                     <AccordionTrigger className="text-base hover:no-underline">
-                      Features
+                      movies
                     </AccordionTrigger>
                     <AccordionContent>
                       <div className="grid md:grid-cols-2">
-                        {features.map((feature, index) => (
+                        {movies.map((feature, index) => (
                           <a
                             href={feature.href}
                             key={index}

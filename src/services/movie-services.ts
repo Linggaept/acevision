@@ -1,11 +1,11 @@
 import { axiosInstance } from "@/lib/api-config";
 
-export const getMoviesNowPlaying = async () => {
+export const getMoviesNowPlaying = async (id: number) => {
   try {
     const response = await axiosInstance.get("3/movie/now_playing", {
       params: {
         language: "en-US",
-        page: 1,
+        page: id,
       },
     });
 
@@ -16,12 +16,12 @@ export const getMoviesNowPlaying = async () => {
   }
 };
 
-export const getMoviesPopular = async () => {
+export const getMoviesPopular = async (currentPage: number) => {
   try {
     const response = await axiosInstance.get("3/movie/popular", {
       params: {
         language: "en-US",
-        page: 1,
+        page: currentPage,
       },
     });
 
@@ -30,14 +30,14 @@ export const getMoviesPopular = async () => {
     console.error("Error fetching popular movies:", error);
     throw error;
   }
-}
+};
 
-export const getMoviesTopRated = async () => {
+export const getMoviesTopRated = async (currentPage: number) => {
   try {
     const response = await axiosInstance.get("3/movie/top_rated", {
       params: {
         language: "en-US",
-        page: 1,
+        page: currentPage,
       },
     });
 
@@ -48,10 +48,40 @@ export const getMoviesTopRated = async () => {
   }
 };
 
-
-export const getMoviesUpcoming = async () => {
+export const getMoviesUpcoming = async (currentPage: number) => {
   try {
     const response = await axiosInstance.get("3/movie/upcoming", {
+      params: {
+        language: "en-US",
+        page: currentPage,
+      },
+    });
+
+    return response.data.results;
+  } catch (error) {
+    console.error("Error fetching upcoming movies:", error);
+    throw error;
+  }
+};
+
+export const getMovieDetailById = async (id: number) => {
+  try {
+    const response = await axiosInstance.get(`3/movie/${id}`, {
+      params: {
+        language: "en-US",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching movie detail:", error);
+    throw error;
+  }
+};
+
+export const getMovieRecomendationById = async (id: number) => {
+  try {
+    const response = await axiosInstance.get(`3/movie/${id}/recommendations`, {
       params: {
         language: "en-US",
         page: 1,
@@ -60,7 +90,39 @@ export const getMoviesUpcoming = async () => {
 
     return response.data.results;
   } catch (error) {
-    console.error("Error fetching upcoming movies:", error);
+    console.error("Error fetching movie recommendations:", error);
+    throw error;
+  }
+};
+
+export const getMovieCastById = async (id: number) => {
+  try {
+    const response = await axiosInstance.get(`3/movie/${id}/credits`, {
+      params: {
+        language: "en-US",
+      },
+    });
+
+    return response.data.cast;
+  } catch (error) {
+    console.error("Error fetching movie cast:", error);
+    throw error;
+  }
+};
+
+export const searchMoviesByKeyword = async (keyword: string) => {
+  try {
+    const response = await axiosInstance.get("3/search/movie", {
+      params: {
+        language: "en-US",
+        query: keyword,
+        page: 1,
+      },
+    });
+
+    return response.data.results;
+  } catch (error) {
+    console.error("Error searching movies:", error);
     throw error;
   }
 };

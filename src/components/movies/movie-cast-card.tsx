@@ -1,16 +1,19 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Movie } from "@/types/movies";
+import { Cast } from "@/types/movies";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { slugify } from "@/lib/slugify";
 
-export default function MovieCard({ movies }: { movies: Movie }) {
+function slugify(str: string) {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+export default function MovieCastCard({ cast }: { cast: Cast }) {
   return (
     <Link
-      href={`/movie/${slugify(movies.title)}-${movies.id}`}
-      className="block w-full max-w-[280px] group"
+      href={`/movie/${slugify(cast.name)}-${cast.id}`}
+      className="block w-full min-w-[280px] group"
     >
       <div
         className={cn(
@@ -26,8 +29,8 @@ export default function MovieCard({ movies }: { movies: Movie }) {
       >
         <div className="relative h-[320px] overflow-hidden">
           <Image
-            src={`https://media.themoviedb.org/t/p/w440_and_h660_face${movies?.poster_path}`}
-            alt={movies?.title}
+            src={`https://media.themoviedb.org/t/p/w440_and_h660_face${cast?.profile_path}`}
+            alt={cast?.name}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"
@@ -52,7 +55,7 @@ export default function MovieCard({ movies }: { movies: Movie }) {
               "border border-white/20 dark:border-zinc-800/50"
             )}
           >
-            {movies?.release_date.split("-")[0]}{" "}
+            {cast?.popularity.toFixed(1)}{" "}
           </span>
         </div>
 
@@ -60,10 +63,10 @@ export default function MovieCard({ movies }: { movies: Movie }) {
           <div className="flex items-center justify-between gap-3">
             <div className="space-y-1.5">
               <h3 className="text-lg font-semibold text-white dark:text-zinc-100 leading-snug tracking-tighter">
-                {movies?.title}
+                {cast?.original_name}
               </h3>
               <p className="text-sm text-zinc-200 dark:text-zinc-300 line-clamp-2 tracking-tight">
-                {movies?.overview}
+                {cast?.character}
               </p>
             </div>
             <div

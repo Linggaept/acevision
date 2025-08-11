@@ -113,7 +113,7 @@ const Navbar5 = () => {
                   href="#"
                   className={navigationMenuTriggerStyle()}
                 >
-                  Products
+                  TV
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
@@ -121,7 +121,7 @@ const Navbar5 = () => {
                   href="#"
                   className={navigationMenuTriggerStyle()}
                 >
-                  Resources
+                  People
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>

@@ -183,8 +183,8 @@ const Navbar5 = () => {
                   </Link>
                 </SheetTitle>
               </SheetHeader>
-              <div className="flex flex-col p-4">
-                <Accordion type="single" collapsible className="mt-4 mb-2">
+              <div className="flex flex-col py-2 px-4">
+                <Accordion type="single" collapsible className=" mb-2">
                   <AccordionItem value="solutions" className="border-none">
                     <AccordionTrigger className="text-base hover:no-underline">
                       Movies
@@ -212,24 +212,27 @@ const Navbar5 = () => {
                   </AccordionItem>
                 </Accordion>
                 <div className="flex flex-col gap-6">
-                  <a href="#" className="font-medium">
-                    Templates
-                  </a>
-                  <a href="#" className="font-medium">
-                    Blog
-                  </a>
-                  <a href="#" className="font-medium">
-                    Pricing
-                  </a>
+                  <Link href="#" className="font-medium">
+                    TV
+                  </Link>
+                  <Link href="#" className="font-medium">
+                    People
+                  </Link>
+                  <Link href="#" className="font-medium">
+                    Contact
+                  </Link>
+                  <Link href="#" className="font-medium">
+                    About
+                  </Link>
+                  {isTokenValid && isAuthenticated ? (
+                    <LogoutButton />
+                  ) : (
+                    <div className="mt-6 flex flex-col gap-4">
+                      <Button variant="outline">Sign in</Button>
+                      <Button>Start for free</Button>
+                    </div>
+                  )}
                 </div>
-                {isTokenValid && isAuthenticated ? (
-                  <LogoutButton />
-                ) : (
-                  <div className="mt-6 flex flex-col gap-4">
-                    <Button variant="outline">Sign in</Button>
-                    <Button>Start for free</Button>
-                  </div>
-                )}
               </div>
             </SheetContent>
           </Sheet>

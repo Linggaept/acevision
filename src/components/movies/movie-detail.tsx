@@ -25,7 +25,7 @@ const MovieDetailClient = ({ slug }: { slug: string }) => {
     fetchMovieDetailById(movieId).catch((error) => {
       console.error("Error fetching movie detail:", error);
     });
-  }, [movieId]); // Only depend on movieId
+  }, [movieId]); 
 
   if (!movieId || isNaN(movieId)) {
     return <div>Movie not found</div>;

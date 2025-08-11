@@ -28,6 +28,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ModeToggle } from "./theme-toggle";
 
 const Navbar5 = () => {
   const movies = [
@@ -67,10 +68,7 @@ const Navbar5 = () => {
     <section className="py-4">
       <div className="container">
         <nav className="flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center gap-2"
-          >
+          <Link href="/" className="flex items-center gap-2">
             <Image
               src="/logo.png"
               width={32}
@@ -79,7 +77,7 @@ const Navbar5 = () => {
               alt="Shadcn UI Navbar"
             />
             <span className="text-lg font-semibold tracking-tighter">
-              acevision.com
+              acevision.id
             </span>
           </Link>
           <NavigationMenu className="hidden lg:block">
@@ -133,10 +131,19 @@ const Navbar5 = () => {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
+
+          <div className="block md:hidden ml-40">
+            <ModeToggle />
+          </div>
+
           <div className="hidden items-center gap-4 lg:flex">
-            <Button onClick={handleSignInClick} variant="outline">Sign in</Button>
+            <ModeToggle />
+            <Button onClick={handleSignInClick} variant="outline">
+              Sign in
+            </Button>
             <Button onClick={handleStartClick}>Start for free</Button>
           </div>
+
           <Sheet>
             <SheetTrigger asChild className="lg:hidden">
               <Button variant="outline" size="icon">
@@ -146,10 +153,7 @@ const Navbar5 = () => {
             <SheetContent side="top" className="max-h-screen overflow-auto">
               <SheetHeader>
                 <SheetTitle>
-                  <Link
-                    href="/"
-                    className="flex items-center gap-2"
-                  >
+                  <Link href="/" className="flex items-center gap-2">
                     <Image
                       src="/logo.png"
                       width={32}
@@ -158,7 +162,7 @@ const Navbar5 = () => {
                       alt="Shadcn UI Navbar"
                     />
                     <span className="text-lg font-semibold tracking-tighter">
-                      acevision.id
+                      {/* acevision.id */}
                     </span>
                   </Link>
                 </SheetTitle>
@@ -167,7 +171,7 @@ const Navbar5 = () => {
                 <Accordion type="single" collapsible className="mt-4 mb-2">
                   <AccordionItem value="solutions" className="border-none">
                     <AccordionTrigger className="text-base hover:no-underline">
-                      movies
+                      Movies
                     </AccordionTrigger>
                     <AccordionContent>
                       <div className="grid md:grid-cols-2">

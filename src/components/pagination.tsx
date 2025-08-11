@@ -31,14 +31,15 @@ export function PaginationComponent() {
     <Pagination className="mt-8">
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href="#" />
+          <PaginationPrevious
+            className={`${currentPage == 1 ? "hidden" : ""}`}
+            onClick={() => handlePageChange(currentPage - 1)}
+          />
         </PaginationItem>
         <PaginationItem>
           <PaginationLink
             href="#"
-            className={` ${
-              currentPage === 1 ? "hidden" : "cursor-pointer"
-            }`}
+            className={` ${currentPage === 1 ? "hidden" : "cursor-pointer"}`}
             onClick={() => handlePageChange(currentPage - 1)}
           >
             {currentPage - 1}
@@ -50,13 +51,21 @@ export function PaginationComponent() {
           </PaginationLink>
         </PaginationItem>
         <PaginationItem>
-          <PaginationLink onClick={() => handlePageChange(currentPage + 1)} className="cursor-pointer">{currentPage + 1}</PaginationLink>
+          <PaginationLink
+            onClick={() => handlePageChange(currentPage + 1)}
+            className="cursor-pointer"
+          >
+            {currentPage + 1}
+          </PaginationLink>
         </PaginationItem>
         <PaginationItem>
           <PaginationEllipsis />
         </PaginationItem>
         <PaginationItem>
-          <PaginationNext onClick={() => handlePageChange(currentPage + 1)} className="cursor-pointer"/>
+          <PaginationNext
+            onClick={() => handlePageChange(currentPage + 1)}
+            className="cursor-pointer"
+          />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

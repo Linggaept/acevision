@@ -31,9 +31,5 @@ export function ProtectedRoute({
     return <>{fallback}</>;
   }
 
-  if (!isAuthenticated || !isTokenValid) {
-    return null; // Will redirect
-  }
-
   return <>{children}</>;
 }

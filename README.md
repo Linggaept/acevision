@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎬 AceVision
 
-## Getting Started
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)
+![Zustand](https://img.shields.io/badge/Zustand-764ABC?style=for-the-badge&logo=react&logoColor=white)
+![shadcn/ui](https://img.shields.io/badge/shadcn/ui-000000?style=for-the-badge)
+![TMDb API](https://img.shields.io/badge/TMDb-01D277?style=for-the-badge&logo=tmdb&logoColor=white)
 
-First, run the development server:
+AceVision adalah platform web untuk menjelajahi film terbaru, menonton trailer, dan mendapatkan rekomendasi film.  
+Dibangun menggunakan **Next.js**, **Axios**, **Zustand**, dan **shadcn/ui** dengan data dari [TMDb](https://www.themoviedb.org/).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎥 Demo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+![AceVision Demo](docs/demo/acevision-demo.gif)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## ✨ Fitur
 
-To learn more about Next.js, take a look at the following resources:
+### 🏠 Home
+- Daftar **film populer terbaru** dari TMDb.
+- Poster, judul, dan rating singkat.
+- Klik film menuju halaman detail.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 🎬 Detail Film
+- Sinopsis, tanggal rilis, genre, rating.
+- Trailer video (jika ada).
+- **Film serupa** & **rekomendasi film**.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 🔍 Pencarian
+- Search bar di halaman home.
+- **Realtime** dengan debounce.
 
-## Deploy on Vercel
+### 📜 Pagination
+- Pagination atau tombol **Load More**.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 🌙 Dark Mode
+- Toggle dark mode untuk UI nyaman.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 🔑 Autentikasi
+- Sign in & Sign up.
+- **Akun default**:
+Email : john@mail.com
+Password : changeme
+
+
+---
+
+## 🛠 Tech Stack
+
+- **Next.js** – Framework React modern
+- **Axios** – HTTP client
+- **Zustand** – State management
+- **shadcn/ui** – Modern UI components
+- **TMDb API** – Sumber data film
+
+---
+
+## 🚀 Instalasi
+
+1. **Clone repository**
+ ```bash
+ git clone https://github.com/username/acevision.git
+ cd acevision
+2. **Install dependencies**
+ npm install
+3. **Buat file .env.local**
+ copy isinya dari .env.example
+4. **Jalankan project**
+ npm run dev
+# atau
+ yarn dev
+5. **buka di browser**
+ http://localhost:3000

@@ -12,7 +12,7 @@ export default function MovieCastList({ id }: { id: number }) {
   return (
     <div className="container mx-auto px-4 py-8">
       <h2 className="text-2xl font-bold mb-4">Movie Cast</h2>
-      <div className="flex overflow-x-auto">
+      <div className="flex overflow-x-auto gap-2">
         {movieCast.map((cast) => (
           <MovieCastCard key={cast.id} cast={cast} />
         ))}

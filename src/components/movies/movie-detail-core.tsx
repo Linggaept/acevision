@@ -3,9 +3,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { MovieDetail } from "@/types/movies";
 import { Calendar, Clock, Globe, Star, TrendingUp, Users } from "lucide-react";
 import Image from "next/image";
+import { MovieTrailerCard } from "./movie-trailer-card";
 
 // Sample data matching the MovieDetail interface
-export default function MovieDetailCore({ movie }: { movie: MovieDetail }) {
+export default function MovieDetailCore({
+  movie,
+  id,
+}: {
+  movie: MovieDetail;
+  id: number;
+}) {
   const formatRuntime = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
@@ -144,6 +151,14 @@ export default function MovieDetailCore({ movie }: { movie: MovieDetail }) {
                 <p className="text-muted-foreground leading-relaxed">
                   {movie.overview}
                 </p>
+              </CardContent>
+            </Card>
+
+            {/* Trailer Video */}
+            <Card>
+              <CardContent className="px-6 py-2 overflow-hidden">
+                <h2 className="text-2xl font-semibold mb-4">Trailer Video</h2>
+                <MovieTrailerCard id={id} />
               </CardContent>
             </Card>
 

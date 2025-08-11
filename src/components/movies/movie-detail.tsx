@@ -5,6 +5,7 @@ import LoadingSpinner from "../loading-spinner";
 import MovieDetailCore from "./movie-detail-core";
 import MovieRecomendationList from "./movie-recomendation-list";
 import MovieCastList from "./movie-cast-list";
+import { MovieTrailerCard } from "./movie-trailer-card";
 
 const MovieDetailClient = ({ slug }: { slug: string }) => {
   const { fetchMovieDetailById, movieDetail, loading } = useMovies();
@@ -37,7 +38,7 @@ const MovieDetailClient = ({ slug }: { slug: string }) => {
         <LoadingSpinner />
       ) : movieDetail ? (
         <>
-          <MovieDetailCore movie={movieDetail} />
+          <MovieDetailCore movie={movieDetail} id={movieId} />
           <MovieCastList id={movieId} />
           <MovieRecomendationList id={movieId} />
         </>

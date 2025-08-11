@@ -34,7 +34,7 @@ export interface MovieDetail {
     id: number;
     name: string;
     logo_path: string;
-    origin_country: string; 
+    origin_country: string;
   }>;
   original_language: string;
 }
@@ -53,3 +53,6 @@ export interface Cast {
   order: number; // urutan dalam cast list (0 = main actor)
 }
 
+export interface Trailer {
+  key: "string";
+}

@@ -126,3 +126,23 @@ export const searchMoviesByKeyword = async (keyword: string) => {
     throw error;
   }
 };
+
+export const getFirstMovieTrailerKey = async (id: number) => {
+  try {
+    const response = await axiosInstance.get(`3/movie/${id}/videos`, {
+      params: {
+        language: "en-US",
+      },
+    });
+
+    // Cari video pertama dengan type "Trailer" dan return key-nya
+    const trailer = response.data.results.find(
+      (video: any) => video.type === "Trailer"
+    );
+
+    return trailer ? trailer.key : null;
+  } catch (error) {
+    console.error("Error fetching movie trailer key:", error);
+    throw error;
+  }
+};

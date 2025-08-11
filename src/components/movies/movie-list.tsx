@@ -108,7 +108,7 @@ const MovieList = () => {
               ))}
             </div>
             <Button
-              onClick={() => router.push("/movies/now-playing")}
+              onClick={() => router.push("/movies/upcoming")}
               className="flex gap-2 mx-auto items-center"
             >
               <p className="font-semibold text-md">upcoming</p>

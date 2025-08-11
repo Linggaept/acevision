@@ -126,21 +126,30 @@ const Navbar5 = () => {
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink
-                  href="#"
+                  href="/contact"
                   className={navigationMenuTriggerStyle()}
                 >
                   Contact
                 </NavigationMenuLink>
               </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="/about"
+                  className={navigationMenuTriggerStyle()}
+                >
+                  About
+                </NavigationMenuLink>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
 
-          <div className="block md:hidden ml-40">
-            <ModeToggle />
-          </div>
-
           {isTokenValid && isAuthenticated ? (
-            <LogoutButton />
+            <>
+              <div className="hidden md:flex gap-2 justify-center items-center">
+                <ModeToggle />
+                <LogoutButton className="hidden md:flex items-center " />
+              </div>
+            </>
           ) : (
             <div className="hidden items-center gap-4 lg:flex">
               <ModeToggle />
@@ -169,7 +178,7 @@ const Navbar5 = () => {
                       alt="Shadcn UI Navbar"
                     />
                     <span className="text-lg font-semibold tracking-tighter">
-                      {/* acevision.id */}
+                      acevision.id
                     </span>
                   </Link>
                 </SheetTitle>

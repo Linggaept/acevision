@@ -14,16 +14,23 @@ interface ProtectedRouteProps {
 export function ProtectedRoute({ 
   children, 
   fallback = <LoadingSpinner />,
-  redirectTo = "/signin" 
+  redirectTo = "/signin"
 }: ProtectedRouteProps) {
   const { isAuthenticated, isTokenValid, isLoading } = useToken();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && (!isAuthenticated || !isTokenValid)) {
-      router.push(redirectTo);
-    } else if (isAuthenticated && isTokenValid ) {
-      router.push("/");
+    if (!isLoading) {
+      // Redirect unauthenticated users to signin
+      if (!isAuthenticated || !isTokenValid) {
+        router.push(redirectTo);
+      } 
+      // Redirect authenticated users away from signin/signup pages
+      else if (isAuthenticated && isTokenValid && 
+               (window.location.pathname === "/signin" || 
+                window.location.pathname === "/signup")) {
+        router.push("/"); // atau halaman utama setelah login
+      }
     }
   }, [isAuthenticated, isTokenValid, isLoading, router, redirectTo]);
 

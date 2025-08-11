@@ -29,8 +29,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ModeToggle } from "./theme-toggle";
+import { useToken } from "@/hooks/useToken";
+import { LogoutButton } from "./logoutButton";
 
 const Navbar5 = () => {
+  const { isTokenValid, isAuthenticated } = useToken();
   const movies = [
     {
       title: "Now Playing",
@@ -136,13 +139,17 @@ const Navbar5 = () => {
             <ModeToggle />
           </div>
 
-          <div className="hidden items-center gap-4 lg:flex">
-            <ModeToggle />
-            <Button onClick={handleSignInClick} variant="outline">
-              Sign in
-            </Button>
-            <Button onClick={handleStartClick}>Start for free</Button>
-          </div>
+          {isTokenValid && isAuthenticated ? (
+            <LogoutButton />
+          ) : (
+            <div className="hidden items-center gap-4 lg:flex">
+              <ModeToggle />
+              <Button onClick={handleSignInClick} variant="outline">
+                Sign in
+              </Button>
+              <Button onClick={handleStartClick}>Start for free</Button>
+            </div>
+          )}
 
           <Sheet>
             <SheetTrigger asChild className="lg:hidden">
@@ -206,10 +213,14 @@ const Navbar5 = () => {
                     Pricing
                   </a>
                 </div>
-                <div className="mt-6 flex flex-col gap-4">
-                  <Button variant="outline">Sign in</Button>
-                  <Button>Start for free</Button>
-                </div>
+                {isTokenValid && isAuthenticated ? (
+                  <LogoutButton />
+                ) : (
+                  <div className="mt-6 flex flex-col gap-4">
+                    <Button variant="outline">Sign in</Button>
+                    <Button>Start for free</Button>
+                  </div>
+                )}
               </div>
             </SheetContent>
           </Sheet>

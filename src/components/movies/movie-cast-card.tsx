@@ -11,8 +11,8 @@ function slugify(str: string) {
 
 export default function MovieCastCard({ cast }: { cast: Cast }) {
   return (
-    <Link
-      href={`/movie/${slugify(cast.name)}-${cast.id}`}
+    <div
+      // href={`/movie/${slugify(cast.name)}-${cast.id}`}
       className="block w-full min-w-[280px] group"
     >
       <div
@@ -83,6 +83,6 @@ export default function MovieCastCard({ cast }: { cast: Cast }) {
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

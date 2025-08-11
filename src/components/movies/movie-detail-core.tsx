@@ -51,8 +51,8 @@ export default function MovieDetailCore({ movie }: { movie: MovieDetail }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent w-full" />
         <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8">
-          <div className="container mx-auto">
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-black mb-14">
+          <div className="container mx-auto mb-20">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-black mb-16 dark:text-white">
               {movie.title}
             </h1>
             {movie.tagline && (

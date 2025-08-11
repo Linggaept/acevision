@@ -22,6 +22,8 @@ export function ProtectedRoute({
   useEffect(() => {
     if (!isLoading && (!isAuthenticated || !isTokenValid)) {
       router.push(redirectTo);
+    } else if (isAuthenticated && isTokenValid ) {
+      router.push("/");
     }
   }, [isAuthenticated, isTokenValid, isLoading, router, redirectTo]);
 

@@ -18,9 +18,11 @@ import { signInService } from "@/services/auth-services";
 import { clientTokenManager } from "@/utils/clientTokenManager";
 import Image from "next/image";
 import Link from "next/link";
-import AlertModal from "../alertModal";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import AlertModal from "../alertModal";
+import { PrivacyPolicyDialog } from "../PolicyPrivacy";
+import { TermsOfServiceDialog } from "../TermsAndService";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -50,25 +52,28 @@ export default function SignInClientPage({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    
+
     try {
       const response = await signInService(values.email, values.password);
 
       if (response && response.access_token) {
         // Gunakan token manager untuk menyimpan token
-        clientTokenManager.setToken({
-          access_token: response.access_token,
-          refresh_token: response.refresh_token,
-          expires_at: response.expires_at, // Timestamp dalam seconds
-          token_type: response.token_type || 'Bearer',
-        }, {
-          maxAge: 7 * 24 * 60 * 60, // 7 hari
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-        });
+        clientTokenManager.setToken(
+          {
+            access_token: response.access_token,
+            refresh_token: response.refresh_token,
+            expires_at: response.expires_at, // Timestamp dalam seconds
+            token_type: response.token_type || "Bearer",
+          },
+          {
+            maxAge: 7 * 24 * 60 * 60, // 7 hari
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+          }
+        );
 
         setShowSuccessAlert(true);
-        
+
         // Tunggu modal ditutup sebelum redirect
         setTimeout(() => {
           router.push("/");
@@ -77,7 +82,7 @@ export default function SignInClientPage({
         setShowErrorAlert(true);
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       setShowErrorAlert(true);
     } finally {
       setIsLoading(false);
@@ -92,7 +97,7 @@ export default function SignInClientPage({
         isOpen={showSuccessAlert}
         onClose={() => setShowSuccessAlert(false)}
       />
-      
+
       <AlertModal
         title="Login Failed"
         description="Invalid credentials. Please check your email and password."
@@ -126,7 +131,7 @@ export default function SignInClientPage({
               </Link>
             </div>
           </div>
-          
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
@@ -136,11 +141,11 @@ export default function SignInClientPage({
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="email" 
-                        placeholder="john@example.com" 
+                      <Input
+                        type="email"
+                        placeholder="john@example.com"
                         disabled={isLoading}
-                        {...field} 
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -154,40 +159,30 @@ export default function SignInClientPage({
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="password" 
-                        placeholder="Enter your password" 
+                      <Input
+                        type="password"
+                        placeholder="Enter your password"
                         disabled={isLoading}
-                        {...field} 
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              
-              <Button 
-                type="submit" 
-                className="w-full" 
-                disabled={isLoading}
-              >
+
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Signing in..." : "Sign In"}
               </Button>
             </form>
           </Form>
-          
-          
         </div>
-        <div className="text-muted-foreground text-center text-xs text-balance">
+        <div className="text-muted-foreground text-center text-xs text-balance mx-auto">
           By clicking continue, you agree to our{" "}
-          <a href="#" className="underline underline-offset-4 hover:text-primary">
-            Terms of Service
-          </a>{" "}
-          and{" "}
-          <a href="#" className="underline underline-offset-4 hover:text-primary">
-            Privacy Policy
-          </a>
-          .
+          <div className="flex items-center mx-auto">
+            <TermsOfServiceDialog />
+            and <PrivacyPolicyDialog />
+          </div>
         </div>
       </div>
     </>

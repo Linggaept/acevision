@@ -20,8 +20,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AlertModal from "../alertModal";
-import { TermsOfServiceDialog } from "../TermsAndService";
 import { PrivacyPolicyDialog } from "../PolicyPrivacy";
+import { TermsOfServiceDialog } from "../TermsAndService";
 
 const formSchema = z.object({
   name: z.string().min(3, {

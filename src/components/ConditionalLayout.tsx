@@ -1,10 +1,9 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { Navbar5 } from "@/components/navbar";
 import { Footer2 } from "@/components/footer";
 import MainContainer from "@/components/MainContainer";
-import { ProtectedRoute } from "./ProtectedRoute";
+import { Navbar5 } from "@/components/navbar";
+import { usePathname } from "next/navigation";
 
 interface ConditionalLayoutProps {
   children: React.ReactNode;
@@ -24,12 +23,10 @@ export default function ConditionalLayout({
   }
 
   return (
-    <ProtectedRoute>
-      <MainContainer>
-        <Navbar5 />
-        {children}
-        <Footer2 />
-      </MainContainer>
-    </ProtectedRoute>
+    <MainContainer>
+      <Navbar5 />
+      {children}
+      <Footer2 />
+    </MainContainer>
   );
 }

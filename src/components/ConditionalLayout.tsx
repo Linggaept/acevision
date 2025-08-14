@@ -27,7 +27,7 @@ export default function ConditionalLayout({
     <MainContainer>
       <Navbar5 />
       {children}
-      <div className="fixed bottom-10 right-10">
+      <div className="fixed bottom-10 right-10 z-50 shadow-sm shadow-primary rounded-sm">
         <ChatPublicDialog />
       </div>
       <Footer2 />

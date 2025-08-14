@@ -1,8 +1,7 @@
 import axios from "axios";
-import { useToken } from "@/hooks/useToken";
 
 export const axiosInstance = axios.create({
-  baseURL: "https://api.escuelajs.co/api/v1",
+  baseURL: process.env.NEXT_PUBLIC_API_URL_AUTH,
   headers: {
     "Content-Type": "application/json",
   },

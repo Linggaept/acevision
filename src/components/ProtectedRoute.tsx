@@ -38,5 +38,6 @@ export function ProtectedRoute({
     return <>{fallback}</>;
   }
 
+
   return <>{children}</>;
 }

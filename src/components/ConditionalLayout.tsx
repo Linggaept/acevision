@@ -4,6 +4,7 @@ import { Footer2 } from "@/components/footer";
 import MainContainer from "@/components/MainContainer";
 import { Navbar5 } from "@/components/navbar";
 import { usePathname } from "next/navigation";
+import ChatPublicDialog from "./chat/chatPublicDialog";
 
 interface ConditionalLayoutProps {
   children: React.ReactNode;
@@ -26,6 +27,9 @@ export default function ConditionalLayout({
     <MainContainer>
       <Navbar5 />
       {children}
+      <div className="fixed bottom-10 right-10">
+        <ChatPublicDialog />
+      </div>
       <Footer2 />
     </MainContainer>
   );

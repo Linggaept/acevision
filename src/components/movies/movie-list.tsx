@@ -1,12 +1,11 @@
 "use client";
 import { useMovies } from "@/lib/store/useMovies";
-import { useEffect } from "react";
-import MovieCard from "./movie-card";
-import LoadingSpinner from "../loading-spinner";
 import { CircleArrowRight } from "lucide-react";
-import Link from "next/link";
-import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import LoadingSpinner from "../loading-spinner";
+import { Button } from "../ui/button";
+import MovieCard from "./movie-card";
 
 const MovieList = () => {
   const {

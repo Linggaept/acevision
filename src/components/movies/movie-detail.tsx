@@ -18,7 +18,6 @@ const MovieDetailClient = ({ slug }: { slug: string }) => {
   const id = parts[parts.length - 1];
   const movieId = Number(id);
 
-  console.log("Movie ID:", movieId);
 
   useEffect(() => {
     if (!movieId || isNaN(movieId)) return;

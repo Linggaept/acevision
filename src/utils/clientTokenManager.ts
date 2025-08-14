@@ -121,7 +121,6 @@ class ClientTokenManager {
         this.setCookie(this.TOKEN_TYPE_KEY, tokenData.token_type, cookieOptions);
       }
 
-      console.log('Token berhasil disimpan ke cookies');
     } catch (error) {
       console.error('Gagal menyimpan token:', error);
       throw new Error('Failed to save token to cookies');
@@ -187,7 +186,6 @@ class ClientTokenManager {
 
     try {
       this.setCookie(this.ACCESS_TOKEN_KEY, newAccessToken, cookieOptions);
-      console.log('Access token berhasil diperbarui');
     } catch (error) {
       console.error('Gagal memperbarui access token:', error);
       throw new Error('Failed to update access token');
@@ -202,7 +200,6 @@ class ClientTokenManager {
 
     try {
       this.setCookie(this.REFRESH_TOKEN_KEY, newRefreshToken, cookieOptions);
-      console.log('Refresh token berhasil diperbarui');
     } catch (error) {
       console.error('Gagal memperbarui refresh token:', error);
       throw new Error('Failed to update refresh token');
@@ -218,7 +215,6 @@ class ClientTokenManager {
       this.deleteCookie(this.REFRESH_TOKEN_KEY);
       this.deleteCookie(this.TOKEN_EXPIRES_KEY);
       this.deleteCookie(this.TOKEN_TYPE_KEY);
-      console.log('Semua token berhasil dihapus');
     } catch (error) {
       console.error('Gagal menghapus token:', error);
       throw new Error('Failed to clear tokens');
@@ -231,7 +227,6 @@ class ClientTokenManager {
   clearAccessToken(): void {
     try {
       this.deleteCookie(this.ACCESS_TOKEN_KEY);
-      console.log('Access token berhasil dihapus');
     } catch (error) {
       console.error('Gagal menghapus access token:', error);
       throw new Error('Failed to clear access token');
@@ -324,20 +319,17 @@ class ClientTokenManager {
   ): Promise<boolean> {
     try {
       if (!this.isTokenValid()) {
-        console.log('Token sudah tidak valid');
         return false;
       }
 
       const remainingTime = this.getTokenRemainingTime();
       if (!remainingTime) {
-        console.log('Tidak dapat menentukan waktu expiry token');
         return false;
       }
 
       const thresholdSeconds = thresholdMinutes * 60;
       
       if (remainingTime <= thresholdSeconds) {
-        console.log(`Token akan expired dalam ${remainingTime} detik, melakukan refresh...`);
         
         const refreshToken = this.getRefreshToken();
         if (!refreshToken) {
@@ -348,7 +340,6 @@ class ClientTokenManager {
         const newTokenData = await refreshTokenFunction(refreshToken);
         this.setToken(newTokenData);
         
-        console.log('Token berhasil di-refresh');
         return true;
       }
 

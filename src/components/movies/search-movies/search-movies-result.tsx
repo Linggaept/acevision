@@ -39,8 +39,7 @@ export default function SearchMoviesResult({
 
   // Handle search all results
   const handleSearchAll = () => {
-    console.log(`Search all results for "${searchKeyword}"`);
-    router.push(`/search?q=${encodeURIComponent(searchKeyword)}`);
+    // router.push(`/search?q=${encodeURIComponent(searchKeyword)}`);
   };
 
   // Handle movie selection

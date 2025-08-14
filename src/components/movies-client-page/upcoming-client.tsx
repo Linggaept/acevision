@@ -18,7 +18,6 @@ const UpcomingClientPage = () => {
     fetchUpcomingMovies();
   }, [fetchMoviesUpcoming, currentPage]);
 
-  console.log("Upcoming Movies:", moviesUpcoming);
   return (
     <>
       {loading ? (
@@ -27,7 +26,7 @@ const UpcomingClientPage = () => {
         <div>
           <section className="flex flex-col gap-y-4">
             <h1 className="text-xl font-bold">Upcoming Movies</h1>
-            <div className="grid grid-cols-5 gap-2">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
               {moviesUpcoming.map((movie) => (
                 <MovieCard key={movie.id} movies={movie} />
               ))}

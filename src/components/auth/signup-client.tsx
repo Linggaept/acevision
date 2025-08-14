@@ -63,7 +63,6 @@ export default function SignUpClientPage({
     setErrorMessage("");
 
     try {
-      console.log("Submitting signup with values:", values);
 
       // PERBAIKAN: Urutan parameter yang benar sesuai dengan service
       const response = await signUpService(
@@ -73,7 +72,6 @@ export default function SignUpClientPage({
         values.password // password
       );
 
-      console.log("Signup response:", response);
 
       if (response && response.id) {
         // Check jika response berhasil (biasanya ada ID)

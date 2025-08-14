@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useToken } from "@/hooks/useToken";
 
 export const axiosInstance = axios.create({
   baseURL: "https://api.escuelajs.co/api/v1",
@@ -30,6 +31,19 @@ export const signUpService = async (
       email,
       password,
       avatar,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getUserLoggedProfile = async (token : string) => {
+  try {
+    const response = await axiosInstance.get("/auth/profile", {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
     });
     return response.data;
   } catch (error) {

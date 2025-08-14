@@ -59,7 +59,6 @@ class TokenManager {
         cookieStore.set(this.TOKEN_TYPE_KEY, tokenData.token_type, cookieOptions);
       }
 
-      console.log('Token berhasil disimpan ke cookies');
     } catch (error) {
       console.error('Gagal menyimpan token:', error);
       throw new Error('Failed to save token to cookies');
@@ -132,7 +131,6 @@ class TokenManager {
 
     try {
       cookieStore.set(this.ACCESS_TOKEN_KEY, newAccessToken, cookieOptions);
-      console.log('Access token berhasil diperbarui');
     } catch (error) {
       console.error('Gagal memperbarui access token:', error);
       throw new Error('Failed to update access token');
@@ -148,7 +146,6 @@ class TokenManager {
 
     try {
       cookieStore.set(this.REFRESH_TOKEN_KEY, newRefreshToken, cookieOptions);
-      console.log('Refresh token berhasil diperbarui');
     } catch (error) {
       console.error('Gagal memperbarui refresh token:', error);
       throw new Error('Failed to update refresh token');
@@ -166,7 +163,6 @@ class TokenManager {
       cookieStore.delete(this.REFRESH_TOKEN_KEY);
       cookieStore.delete(this.TOKEN_EXPIRES_KEY);
       cookieStore.delete(this.TOKEN_TYPE_KEY);
-      console.log('Semua token berhasil dihapus');
     } catch (error) {
       console.error('Gagal menghapus token:', error);
       throw new Error('Failed to clear tokens');
@@ -181,7 +177,6 @@ class TokenManager {
 
     try {
       cookieStore.delete(this.ACCESS_TOKEN_KEY);
-      console.log('Access token berhasil dihapus');
     } catch (error) {
       console.error('Gagal menghapus access token:', error);
       throw new Error('Failed to clear access token');

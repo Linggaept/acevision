@@ -79,7 +79,6 @@ export default function SearchMovies() {
   // Handle suggestion selection
   const handleSelectSuggestion = (movie: any) => {
     // Don't close immediately, let the navigation happen first
-    console.log("Movie selected:", movie);
     // setSearchKeyword(movie.title);
     // setIsSearchOpen(false);
     // setSelectedSearchIndex(-1);
@@ -91,16 +90,13 @@ export default function SearchMovies() {
     const searchQuery = searchTerm || searchKeyword;
     if (!searchQuery.trim()) return;
 
-    console.log("Searching for:", searchQuery, "Movie ID:", movieId);
 
     // Navigate to movie detail if movieId is provided
     if (movieId) {
       // router.push(`/movie/${movieId}-${movie.title.toLowerCase().replace(/\s+/g, '-')}`);
-      console.log("Navigate to movie:", movieId);
     } else {
       // Navigate to search results page
       // router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
-      console.log("Navigate to search results page");
     }
   };
 

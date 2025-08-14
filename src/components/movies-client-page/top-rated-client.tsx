@@ -25,7 +25,7 @@ const TopRatedClientPage = () => {
         <div>
           <section className="flex flex-col gap-y-4">
             <h1 className="text-xl font-bold">Top Rated Movies</h1>
-            <div className="grid grid-cols-5 gap-2">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
               {moviesTopRated.map((movie) => (
                 <MovieCard key={movie.id} movies={movie} />
               ))}

@@ -5,15 +5,16 @@
 ![Zustand](https://img.shields.io/badge/Zustand-764ABC?style=for-the-badge&logo=react&logoColor=white)
 ![shadcn/ui](https://img.shields.io/badge/shadcn/ui-000000?style=for-the-badge)
 ![TMDb API](https://img.shields.io/badge/TMDb-01D277?style=for-the-badge&logo=tmdb&logoColor=white)
+![PieSocket](https://img.shields.io/badge/PieSocket%20API-FF6B6B?style=for-the-badge&logo=webrtc&logoColor=white)
 
-AceVision adalah platform web untuk menjelajahi film terbaru, menonton trailer, dan mendapatkan rekomendasi film.  
-Dibangun menggunakan **Next.js**, **Axios**, **Zustand**, dan **shadcn/ui** dengan data dari [TMDb](https://www.themoviedb.org/).
+AceVision adalah platform web untuk menjelajahi film terbaru, menonton trailer, mendapatkan rekomendasi film, dan berdiskusi dengan komunitas melalui chat realtime.
+Dibangun menggunakan Next.js, Axios, Zustand, shadcn/ui, dan PieSocket dengan data dari TMDb.
 
 ---
 
 ## 🎥 Demo
 
-![AceVision Demo](docs/demo/acevision-demo.gif)
+https://acevision.vercel.app
 
 ---
 
@@ -41,10 +42,12 @@ Dibangun menggunakan **Next.js**, **Axios**, **Zustand**, dan **shadcn/ui** deng
 
 ### 🔑 Autentikasi
 - Sign in & Sign up.
-- **Akun default**:
-Email : john@mail.com
-Password : changeme
 
+### 💬 Chat Publik
+- Terhubung dengan pengguna lain secara **real-time**.
+- Menggunakan **PieSocket API** sebagai backend WebSocket.
+- Mendukung pengiriman teks.
+- Dilengkapi **notifikasi pengguna bergabung/keluar**.
 
 ---
 
@@ -55,22 +58,25 @@ Password : changeme
 - **Zustand** – State management
 - **shadcn/ui** – Modern UI components
 - **TMDb API** – Sumber data film
+- **PieSocket API** – Realtime WebSocket server
 
 ---
 
 ## 🚀 Instalasi
 
-1. **Clone repository**
- ```bash
- git clone https://github.com/username/acevision.git
- cd acevision
-2. **Install dependencies**
- npm install
-3. **Buat file .env.local**
- copy isinya dari .env.example
-4. **Jalankan project**
- npm run dev
+```bash
+# 1. Clone repository
+git clone https://github.com/username/acevision.git
+cd acevision
+
+# 2. Install dependencies
+npm install
 # atau
- yarn dev
-5. **buka di browser**
- http://localhost:3000
+yarn install
+
+# 3. Buat file .env.local (salin dari .env.example)
+
+# 4. Jalankan project
+npm run dev
+# atau
+yarn dev

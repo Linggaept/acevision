@@ -77,6 +77,7 @@ export default function SignInClientPage({
         // Tunggu modal ditutup sebelum redirect
         setTimeout(() => {
           router.push("/");
+          window.location.reload();
         }, 1500);
       } else {
         setShowErrorAlert(true);

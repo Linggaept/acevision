@@ -163,8 +163,7 @@ export function usePieSocket(
         }
       };
 
-      socketRef.current.onerror = (event: Event): void => {
-        console.error("❌ WebSocket error:", event);
+      socketRef.current.onerror = (): void => {
         isConnectingRef.current = false;
         
         setConnectionStatus((prev) => ({

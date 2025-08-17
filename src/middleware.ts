@@ -8,12 +8,12 @@ export function middleware(request: NextRequest) {
   const tokenExpires = request.cookies.get('token_expires')?.value;
   
   // Daftar protected routes
-  const protectedRoutes = ['/movie', '/'];
+  const protectedRoutes = ['/movies', '/about', '/contact', '/movie'];
   const authRoutes = ['/signin', '/signup'];
   
   const { pathname } = request.nextUrl;
   
-  // Check if current path is protected
+  // Check if current path is protected (exclude root '/')
   const isProtectedRoute = protectedRoutes.some(route => 
     pathname.startsWith(route)
   );
@@ -22,6 +22,9 @@ export function middleware(request: NextRequest) {
   const isAuthRoute = authRoutes.some(route => 
     pathname.startsWith(route)
   );
+  
+  // Check if accessing root path
+  const isRootPath = pathname === '/';
 
   // Function to check if token is expired
   const isTokenExpired = (expiresAt: string): boolean => {
@@ -38,22 +41,25 @@ export function middleware(request: NextRequest) {
   };
 
   // Redirect logic
-  if (isProtectedRoute) {
-    if (!isTokenValid()) {
-      // Token tidak valid, redirect ke signin
-      const signInUrl = new URL('/signin', request.url);
-      signInUrl.searchParams.set('callbackUrl', request.url);
-      return NextResponse.redirect(signInUrl);
-    }
-  }
-
   if (isAuthRoute) {
     if (isTokenValid()) {
       // User sudah login, redirect ke dashboard
       return NextResponse.redirect(new URL('/', request.url));
     }
+    // User belum login, lanjutkan ke auth route
+    return NextResponse.next();
   }
 
+  if (isRootPath || isProtectedRoute) {
+    if (!isTokenValid()) {
+      // Token tidak valid, redirect ke signin
+      return NextResponse.redirect(new URL('/signin', request.url));
+    }
+    // Token valid, lanjutkan ke route yang diminta
+    return NextResponse.next();
+  }
+
+  // Untuk route lainnya, lanjutkan tanpa middleware
   return NextResponse.next();
 }
 

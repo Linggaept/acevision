@@ -22,8 +22,9 @@ export default function ChatPublicDialog() {
   const [hasConnected, setHasConnected] = useState<boolean>(false); // Track connection state
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+
   const { fetchUserLoggedProfile, user, users, loading, error } = useUsers();
-  const { token } = useToken();
+  const { token, isAuthenticated, isTokenValid } = useToken();
 
   const accessToken = token?.access_token;
   
@@ -82,13 +83,14 @@ export default function ChatPublicDialog() {
 
   // Reset connection state when dialog closes
   useEffect(() => {
-    if (!isDialogOpen) {
+    if (!isAuthenticated && !isTokenValid) {
       if (isConnected) {
         disconnect();
+        console.log('disconnect')
       }
       setHasConnected(false);
     }
-  }, [isDialogOpen, isConnected, disconnect]);
+  }, [isAuthenticated, isTokenValid, isConnected, disconnect]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();

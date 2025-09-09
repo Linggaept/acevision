@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import LoadingSpinner from "./loading-spinner";
 
@@ -18,18 +18,20 @@ export function ProtectedRoute({
 }: ProtectedRouteProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    if (status === 'unauthenticated' && pathname === '/') {
       router.push(redirectTo);
     } else if (status === 'authenticated' && 
-              (window.location.pathname === "/signin" || 
-               window.location.pathname === "/signup")) {
+              (pathname === "/signin" || pathname === "/signup")) {
       router.push("/");
     }
-  }, [status, router, redirectTo]);
+  }, [status, router, redirectTo, pathname]);
 
-  if (status === 'loading') {
+  // Show loading state while checking authentication
+  if (status === 'loading' || 
+      (status === 'unauthenticated' && pathname === '/')) {
     return <>{fallback}</>;
   }
 

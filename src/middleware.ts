@@ -1,32 +1,28 @@
-// middleware.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export function middleware(request: NextRequest) {
-  // Ambil token dari cookies
-  const accessToken = request.cookies.get('access_token')?.value;
-  const tokenExpires = request.cookies.get('token_expires')?.value;
-  
-  // Daftar protected routes
-  const protectedRoutes = ['/movies', '/about', '/contact', '/movie'];
-  const authRoutes = ['/signin', '/signup'];
-  
+export async function middleware(request: NextRequest) {
+  // Get the NextAuth session token
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+
+  const accessToken = request.cookies.get("access_token")?.value;
+  const tokenExpires = request.cookies.get("token_expires")?.value;
+
   const { pathname } = request.nextUrl;
-  
-  // Check if current path is protected (exclude root '/')
-  const isProtectedRoute = protectedRoutes.some(route => 
-    pathname.startsWith(route)
-  );
-  
-  // Check if current path is auth route
-  const isAuthRoute = authRoutes.some(route => 
-    pathname.startsWith(route)
-  );
-  
-  // Check if accessing root path
-  const isRootPath = pathname === '/';
 
-  // Function to check if token is expired
+  // Define protected and auth routes
+  const protectedRoutes = ["/movies", "/about", "/contact", "/movie"];
+  const authRoutes = ["/signin", "/signup"];
+
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+  const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
+
   const isTokenExpired = (expiresAt: string): boolean => {
     const expiryTime = parseInt(expiresAt);
     const currentTime = Math.floor(Date.now() / 1000);
@@ -42,38 +38,26 @@ export function middleware(request: NextRequest) {
 
   // Redirect logic
   if (isAuthRoute) {
-    if (isTokenValid()) {
-      // User sudah login, redirect ke dashboard
-      return NextResponse.redirect(new URL('/', request.url));
+    if (token || isTokenValid()) {
+      // User is signed in and trying to access auth routes
+      return NextResponse.redirect(new URL("/", request.url));
     }
-    // User belum login, lanjutkan ke auth route
+    // Allow access to auth routes if not signed in
     return NextResponse.next();
   }
 
-  if (isRootPath || isProtectedRoute) {
-    if (!isTokenValid()) {
-      // Token tidak valid, redirect ke signin
-      return NextResponse.redirect(new URL('/signin', request.url));
+  if (isProtectedRoute) {
+    if (!token || !isTokenValid()) {
+      // No token, redirect to signin
+      return NextResponse.redirect(new URL("/signin", request.url));
     }
-    // Token valid, lanjutkan ke route yang diminta
+    // Has token, allow access to protected route
     return NextResponse.next();
   }
 
-  // Untuk route lainnya, lanjutkan tanpa middleware
   return NextResponse.next();
 }
 
-// Configure which paths the middleware should run on
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|public/).*)',
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|public/).*)"],
 };

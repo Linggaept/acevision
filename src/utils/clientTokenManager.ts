@@ -1,5 +1,7 @@
 // utils/clientTokenManager.ts
 // Client-side token manager untuk digunakan di komponen React
+import { setCookie, getCookie, deleteCookie } from 'cookies-next';
+// import type { TokenData, CookieOptions } from './types';
 
 export interface TokenData {
   access_token: string;
@@ -12,23 +14,23 @@ export interface CookieOptions {
   maxAge?: number; // in seconds
   expires?: Date;
   secure?: boolean;
-  sameSite?: 'strict' | 'lax' | 'none';
+  sameSite?: "strict" | "lax" | "none";
   path?: string;
   domain?: string;
 }
 
 class ClientTokenManager {
-  private readonly ACCESS_TOKEN_KEY = 'access_token';
-  private readonly REFRESH_TOKEN_KEY = 'refresh_token';
-  private readonly TOKEN_EXPIRES_KEY = 'token_expires';
-  private readonly TOKEN_TYPE_KEY = 'token_type';
+  private readonly ACCESS_TOKEN_KEY = "access_token";
+  private readonly REFRESH_TOKEN_KEY = "refresh_token";
+  private readonly TOKEN_EXPIRES_KEY = "token_expires";
+  private readonly TOKEN_TYPE_KEY = "token_type";
 
   // Default cookie options
   private readonly defaultOptions: CookieOptions = {
     maxAge: 7 * 24 * 60 * 60, // 7 days
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
   };
 
   /**
@@ -68,16 +70,16 @@ class ClientTokenManager {
    * Utility function untuk get cookie
    */
   private getCookie(name: string): string | null {
-    if (typeof document === 'undefined') {
+    if (typeof document === "undefined") {
       return null; // SSR protection
     }
 
-    const nameEQ = name + '=';
-    const ca = document.cookie.split(';');
-    
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(";");
+
     for (let i = 0; i < ca.length; i++) {
       let c = ca[i];
-      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+      while (c.charAt(0) === " ") c = c.substring(1, c.length);
       if (c.indexOf(nameEQ) === 0) {
         return decodeURIComponent(c.substring(nameEQ.length, c.length));
       }
@@ -89,7 +91,7 @@ class ClientTokenManager {
    * Utility function untuk delete cookie
    */
   private deleteCookie(name: string): void {
-    if (typeof document === 'undefined') {
+    if (typeof document === "undefined") {
       return; // SSR protection
     }
 
@@ -99,31 +101,23 @@ class ClientTokenManager {
   /**
    * CREATE - Menyimpan token ke cookies
    */
-  setToken(tokenData: TokenData, options?: Partial<CookieOptions>): void {
-    const cookieOptions = { ...this.defaultOptions, ...options };
-
+  setToken(tokenData: TokenData): void {
     try {
-      // Set access token
-      this.setCookie(this.ACCESS_TOKEN_KEY, tokenData.access_token, cookieOptions);
-
-      // Set refresh token jika ada
+      if (tokenData.access_token) {
+        setCookie(this.ACCESS_TOKEN_KEY, tokenData.access_token);
+      }
       if (tokenData.refresh_token) {
-        this.setCookie(this.REFRESH_TOKEN_KEY, tokenData.refresh_token, cookieOptions);
+        setCookie(this.REFRESH_TOKEN_KEY, tokenData.refresh_token);
       }
-
-      // Set expiry time jika ada
       if (tokenData.expires_at) {
-        this.setCookie(this.TOKEN_EXPIRES_KEY, tokenData.expires_at.toString(), cookieOptions);
+        setCookie(this.TOKEN_EXPIRES_KEY, tokenData.expires_at.toString());
       }
-
-      // Set token type jika ada
       if (tokenData.token_type) {
-        this.setCookie(this.TOKEN_TYPE_KEY, tokenData.token_type, cookieOptions);
+        setCookie(this.TOKEN_TYPE_KEY, tokenData.token_type);
       }
-
     } catch (error) {
-      console.error('Gagal menyimpan token:', error);
-      throw new Error('Failed to save token to cookies');
+      console.error("Error setting token:", error);
+      throw error;
     }
   }
 
@@ -132,24 +126,17 @@ class ClientTokenManager {
    */
   getToken(): TokenData | null {
     try {
-      const accessToken = this.getCookie(this.ACCESS_TOKEN_KEY);
-      
-      if (!accessToken) {
-        return null;
-      }
-
-      const refreshToken = this.getCookie(this.REFRESH_TOKEN_KEY);
-      const expiresAt = this.getCookie(this.TOKEN_EXPIRES_KEY);
-      const tokenType = this.getCookie(this.TOKEN_TYPE_KEY);
+      const access_token = getCookie(this.ACCESS_TOKEN_KEY)?.toString();
+      if (!access_token) return null;
 
       return {
-        access_token: accessToken,
-        refresh_token: refreshToken || undefined,
-        expires_at: expiresAt ? parseInt(expiresAt) : undefined,
-        token_type: tokenType || undefined,
+        access_token,
+        refresh_token: getCookie(this.REFRESH_TOKEN_KEY)?.toString(),
+        expires_at: Number(getCookie(this.TOKEN_EXPIRES_KEY)),
+        token_type: getCookie(this.TOKEN_TYPE_KEY)?.toString(),
       };
     } catch (error) {
-      console.error('Gagal mengambil token:', error);
+      console.error("Error getting token:", error);
       return null;
     }
   }
@@ -161,7 +148,7 @@ class ClientTokenManager {
     try {
       return this.getCookie(this.ACCESS_TOKEN_KEY);
     } catch (error) {
-      console.error('Gagal mengambil access token:', error);
+      console.error("Gagal mengambil access token:", error);
       return null;
     }
   }
@@ -173,7 +160,7 @@ class ClientTokenManager {
     try {
       return this.getCookie(this.REFRESH_TOKEN_KEY);
     } catch (error) {
-      console.error('Gagal mengambil refresh token:', error);
+      console.error("Gagal mengambil refresh token:", error);
       return null;
     }
   }
@@ -181,28 +168,34 @@ class ClientTokenManager {
   /**
    * UPDATE - Memperbarui access token
    */
-  updateAccessToken(newAccessToken: string, options?: Partial<CookieOptions>): void {
+  updateAccessToken(
+    newAccessToken: string,
+    options?: Partial<CookieOptions>
+  ): void {
     const cookieOptions = { ...this.defaultOptions, ...options };
 
     try {
       this.setCookie(this.ACCESS_TOKEN_KEY, newAccessToken, cookieOptions);
     } catch (error) {
-      console.error('Gagal memperbarui access token:', error);
-      throw new Error('Failed to update access token');
+      console.error("Gagal memperbarui access token:", error);
+      throw new Error("Failed to update access token");
     }
   }
 
   /**
    * UPDATE - Memperbarui refresh token
    */
-  updateRefreshToken(newRefreshToken: string, options?: Partial<CookieOptions>): void {
+  updateRefreshToken(
+    newRefreshToken: string,
+    options?: Partial<CookieOptions>
+  ): void {
     const cookieOptions = { ...this.defaultOptions, ...options };
 
     try {
       this.setCookie(this.REFRESH_TOKEN_KEY, newRefreshToken, cookieOptions);
     } catch (error) {
-      console.error('Gagal memperbarui refresh token:', error);
-      throw new Error('Failed to update refresh token');
+      console.error("Gagal memperbarui refresh token:", error);
+      throw new Error("Failed to update refresh token");
     }
   }
 
@@ -211,13 +204,12 @@ class ClientTokenManager {
    */
   clearTokens(): void {
     try {
-      this.deleteCookie(this.ACCESS_TOKEN_KEY);
-      this.deleteCookie(this.REFRESH_TOKEN_KEY);
-      this.deleteCookie(this.TOKEN_EXPIRES_KEY);
-      this.deleteCookie(this.TOKEN_TYPE_KEY);
+      deleteCookie(this.ACCESS_TOKEN_KEY);
+      deleteCookie(this.REFRESH_TOKEN_KEY);
+      deleteCookie(this.TOKEN_EXPIRES_KEY);
+      deleteCookie(this.TOKEN_TYPE_KEY);
     } catch (error) {
-      console.error('Gagal menghapus token:', error);
-      throw new Error('Failed to clear tokens');
+      console.error("Error clearing tokens:", error);
     }
   }
 
@@ -228,8 +220,8 @@ class ClientTokenManager {
     try {
       this.deleteCookie(this.ACCESS_TOKEN_KEY);
     } catch (error) {
-      console.error('Gagal menghapus access token:', error);
-      throw new Error('Failed to clear access token');
+      console.error("Gagal menghapus access token:", error);
+      throw new Error("Failed to clear access token");
     }
   }
 
@@ -239,17 +231,17 @@ class ClientTokenManager {
   isTokenExpired(): boolean {
     try {
       const expiresAt = this.getCookie(this.TOKEN_EXPIRES_KEY);
-      
+
       if (!expiresAt) {
         return false; // Jika tidak ada expiry, anggap belum expired
       }
 
       const expiryTime = parseInt(expiresAt);
       const currentTime = Math.floor(Date.now() / 1000); // Convert to seconds
-      
+
       return currentTime >= expiryTime;
     } catch (error) {
-      console.error('Gagal mengecek expiry token:', error);
+      console.error("Gagal mengecek expiry token:", error);
       return true; // Jika ada error, anggap expired untuk keamanan
     }
   }
@@ -265,7 +257,7 @@ class ClientTokenManager {
       const isExpired = this.isTokenExpired();
       return !isExpired;
     } catch (error) {
-      console.error('Gagal mengecek validitas token:', error);
+      console.error("Gagal mengecek validitas token:", error);
       return false;
     }
   }
@@ -276,14 +268,14 @@ class ClientTokenManager {
   getTokenExpiryDate(): Date | null {
     try {
       const expiresAt = this.getCookie(this.TOKEN_EXPIRES_KEY);
-      
+
       if (!expiresAt) {
         return null;
       }
 
       return new Date(parseInt(expiresAt) * 1000); // Convert from seconds to milliseconds
     } catch (error) {
-      console.error('Gagal mengambil tanggal expiry:', error);
+      console.error("Gagal mengambil tanggal expiry:", error);
       return null;
     }
   }
@@ -294,18 +286,18 @@ class ClientTokenManager {
   getTokenRemainingTime(): number | null {
     try {
       const expiresAt = this.getCookie(this.TOKEN_EXPIRES_KEY);
-      
+
       if (!expiresAt) {
         return null;
       }
 
       const expiryTime = parseInt(expiresAt);
       const currentTime = Math.floor(Date.now() / 1000);
-      
+
       const remaining = expiryTime - currentTime;
       return remaining > 0 ? remaining : 0;
     } catch (error) {
-      console.error('Gagal mengambil waktu remaining token:', error);
+      console.error("Gagal mengambil waktu remaining token:", error);
       return null;
     }
   }
@@ -328,24 +320,23 @@ class ClientTokenManager {
       }
 
       const thresholdSeconds = thresholdMinutes * 60;
-      
+
       if (remainingTime <= thresholdSeconds) {
-        
         const refreshToken = this.getRefreshToken();
         if (!refreshToken) {
-          console.error('Refresh token tidak tersedia');
+          console.error("Refresh token tidak tersedia");
           return false;
         }
 
         const newTokenData = await refreshTokenFunction(refreshToken);
         this.setToken(newTokenData);
-        
+
         return true;
       }
 
       return false; // Tidak perlu refresh
     } catch (error) {
-      console.error('Gagal melakukan auto refresh token:', error);
+      console.error("Gagal melakukan auto refresh token:", error);
       return false;
     }
   }

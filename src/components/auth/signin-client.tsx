@@ -1,7 +1,4 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,15 +11,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { signInService } from "@/services/auth-services";
-import { clientTokenManager } from "@/utils/clientTokenManager";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { signInService } from "@/services/auth-services";
+import { clientTokenManager } from "@/utils/clientTokenManager";
+import { zodResolver } from "@hookform/resolvers/zod";
 import AlertModal from "../alertModal";
-import { PrivacyPolicyDialog } from "../PolicyPrivacy";
-import { TermsOfServiceDialog } from "../TermsAndService";
+
+import GoogleLoginButton from "../button/googleLoginButton";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -58,19 +59,12 @@ export default function SignInClientPage({
 
       if (response && response.access_token) {
         // Gunakan token manager untuk menyimpan token
-        clientTokenManager.setToken(
-          {
-            access_token: response.access_token,
-            refresh_token: response.refresh_token,
-            expires_at: response.expires_at, // Timestamp dalam seconds
-            token_type: response.token_type || "Bearer",
-          },
-          {
-            maxAge: 7 * 24 * 60 * 60, // 7 hari
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-          }
-        );
+        clientTokenManager.setToken({
+          access_token: response.access_token,
+          refresh_token: response.refresh_token,
+          expires_at: response.expires_at, // Timestamp dalam seconds
+          token_type: response.token_type || "Bearer",
+        });
 
         setShowSuccessAlert(true);
 
@@ -175,15 +169,19 @@ export default function SignInClientPage({
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Signing in..." : "Sign In"}
               </Button>
+              <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+                <span className="bg-card text-muted-foreground relative z-10 px-2">
+                  Or continue with
+                </span>
+              </div>
             </form>
+            {/* Google Login Button */}
+            <GoogleLoginButton />
           </Form>
         </div>
         <div className="text-muted-foreground text-center text-xs text-balance mx-auto">
-          By clicking continue, you agree to our{" "}
-          <div className="flex items-center mx-auto">
-            <TermsOfServiceDialog />
-            and <PrivacyPolicyDialog />
-          </div>
+          By clicking continue, you agree to our Terms of Service and Privacy
+          Policy.
         </div>
       </div>
     </>

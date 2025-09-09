@@ -1,6 +1,6 @@
 "use client";
 
-import { useToken } from "@/hooks/useToken";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import LoadingSpinner from "./loading-spinner";
@@ -16,28 +16,22 @@ export function ProtectedRoute({
   fallback = <LoadingSpinner />,
   redirectTo = "/signin"
 }: ProtectedRouteProps) {
-  const { isAuthenticated, isTokenValid, isLoading } = useToken();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading) {
-      // Redirect unauthenticated users to signin
-      if (!isAuthenticated || !isTokenValid) {
-        router.push(redirectTo);
-      } 
-      // Redirect authenticated users away from signin/signup pages
-      else if (isAuthenticated && isTokenValid && 
-               (window.location.pathname === "/signin" || 
-                window.location.pathname === "/signup")) {
-        router.push("/"); // atau halaman utama setelah login
-      }
+    if (status === 'unauthenticated') {
+      router.push(redirectTo);
+    } else if (status === 'authenticated' && 
+              (window.location.pathname === "/signin" || 
+               window.location.pathname === "/signup")) {
+      router.push("/");
     }
-  }, [isAuthenticated, isTokenValid, isLoading, router, redirectTo]);
+  }, [status, router, redirectTo]);
 
-  if (isLoading) {
+  if (status === 'loading') {
     return <>{fallback}</>;
   }
-
 
   return <>{children}</>;
 }

@@ -31,9 +31,12 @@ import { useRouter } from "next/navigation";
 import { ModeToggle } from "./theme-toggle";
 import { useToken } from "@/hooks/useToken";
 import { LogoutButton } from "./logoutButton";
+import { useSession } from "next-auth/react";
 
 const Navbar5 = () => {
   const { isTokenValid, isAuthenticated } = useToken();
+  const { data: session } = useSession();
+
   const movies = [
     {
       title: "Now Playing",
@@ -143,7 +146,7 @@ const Navbar5 = () => {
             </NavigationMenuList>
           </NavigationMenu>
 
-          {isTokenValid && isAuthenticated ? (
+          {(isTokenValid && isAuthenticated) || session ? (
             <>
               <div className="hidden md:flex gap-2 justify-center items-center">
                 <ModeToggle />
@@ -224,7 +227,7 @@ const Navbar5 = () => {
                   <Link href="#" className="font-medium">
                     About
                   </Link>
-                  {isTokenValid && isAuthenticated ? (
+                  {(isTokenValid && isAuthenticated) || session ? (
                     <LogoutButton />
                   ) : (
                     <div className="mt-6 flex flex-col gap-4">

@@ -31,18 +31,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SessionProviders>
+        <SessionProviders>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
             <ProtectedRoute>
               <ConditionalLayout>{children}</ConditionalLayout>
             </ProtectedRoute>
-          </SessionProviders>
-        </ThemeProvider>
+          </ThemeProvider>
+        </SessionProviders>
       </body>
     </html>
   );

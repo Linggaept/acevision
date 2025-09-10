@@ -23,8 +23,14 @@ export default function ConditionalLayout({
   const authRoutes = ["/signin", "/signup", "/login"];
   const isAuthRoute = authRoutes.includes(pathname);
 
-  // Check if user is authenticated
-  const isUserAuthenticated = session || (isAuthenticated && isTokenValid);
+  // Check if user is authenticated via NextAuth (Google, GitHub, etc.)
+  const hasNextAuthSession = !!session;
+  
+  // Check if user is authenticated via custom token (manual login)
+  const hasCustomToken = isAuthenticated && isTokenValid;
+  
+  // User is authenticated if they have EITHER NextAuth session OR valid custom token
+  const isUserAuthenticated = hasNextAuthSession || hasCustomToken;
 
   if (isAuthRoute) {
     return <MainContainer>{children}</MainContainer>;

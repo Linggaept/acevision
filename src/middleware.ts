@@ -40,15 +40,30 @@ export async function middleware(request: NextRequest) {
       return currentTime >= expiryTime;
     };
 
-    // Function to check if token is valid
-    const isTokenValid = (): boolean => {
+    // Function to check if custom token is valid
+    const isCustomTokenValid = (): boolean => {
       if (!accessToken) return false;
       if (!tokenExpires) return true; // If no expiry set, assume valid
       return !isTokenExpired(tokenExpires);
     };
 
-    // Check if user is authenticated (either NextAuth or custom token)
-    const isAuthenticated = token || isTokenValid();
+    // Check if user is authenticated via NextAuth (Google, etc.)
+    const hasNextAuthSession = !!token;
+    
+    // Check if user is authenticated via custom token (manual login)
+    const hasCustomToken = isCustomTokenValid();
+
+    // User is authenticated if they have EITHER NextAuth session OR valid custom token
+    const isAuthenticated = hasNextAuthSession || hasCustomToken;
+
+    // console.log('Middleware Debug:', {
+    //   pathname,
+    //   hasNextAuthSession,
+    //   hasCustomToken,
+    //   isAuthenticated,
+    //   tokenExists: !!token,
+    //   accessTokenExists: !!accessToken
+    // });
 
     // Redirect logic for auth routes
     if (isAuthRoute) {

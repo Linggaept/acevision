@@ -32,8 +32,25 @@ export function ProtectedRoute({
   );
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
   
-  // Check if user is authenticated
-  const isUserAuthenticated = session || (isAuthenticated && isTokenValid);
+  // Check if user is authenticated via NextAuth (Google, GitHub, etc.)
+  const hasNextAuthSession = !!session;
+  
+  // Check if user is authenticated via custom token (manual login)  
+  const hasCustomToken = isAuthenticated && isTokenValid;
+  
+  // User is authenticated if they have EITHER NextAuth session OR valid custom token
+  const isUserAuthenticated = hasNextAuthSession || hasCustomToken;
+
+  // Debug logging
+  // console.log('ProtectedRoute Debug:', {
+  //   pathname,
+  //   hasNextAuthSession,
+  //   hasCustomToken,
+  //   isUserAuthenticated,
+  //   sessionStatus: status,
+  //   tokenLoading,
+  //   session: !!session
+  // });
 
   useEffect(() => {
     // Don't redirect if still loading
@@ -43,6 +60,7 @@ export function ProtectedRoute({
 
     // Handle auth routes (signin, signup)
     if (isAuthRoute && isUserAuthenticated) {
+      console.log('Redirecting from auth route to home');
       setIsRedirecting(true);
       router.push("/");
       return;
@@ -50,6 +68,7 @@ export function ProtectedRoute({
 
     // Handle protected routes
     if (isProtectedRoute && !isUserAuthenticated) {
+      console.log('Redirecting from protected route to signin');
       setIsRedirecting(true);
       router.push(redirectTo);
       return;
@@ -59,6 +78,8 @@ export function ProtectedRoute({
     status,
     tokenLoading,
     isUserAuthenticated,
+    hasNextAuthSession,
+    hasCustomToken,
     isAuthRoute,
     isProtectedRoute,
     pathname,

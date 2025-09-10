@@ -1,3 +1,4 @@
+// components/ProtectedRoute.tsx
 "use client";
 
 import { useSession } from "next-auth/react";
@@ -22,6 +23,7 @@ export function ProtectedRoute({
   const pathname = usePathname();
   const { isAuthenticated, isTokenValid, isLoading: tokenLoading } = useToken();
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const [hasHydrated, setHasHydrated] = useState(false);
 
   // Define protected routes - same as in middleware
   const protectedRoutes = ["/movies", "/about", "/contact", "/movie"];
@@ -32,27 +34,45 @@ export function ProtectedRoute({
   );
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
   
-  // Check if user is authenticated via NextAuth (Google, GitHub, etc.)
+  // Check authentication status
   const hasNextAuthSession = !!session;
-  
-  // Check if user is authenticated via custom token (manual login)  
   const hasCustomToken = isAuthenticated && isTokenValid;
-  
-  // User is authenticated if they have EITHER NextAuth session OR valid custom token
   const isUserAuthenticated = hasNextAuthSession || hasCustomToken;
 
-  // Debug logging
-  // console.log('ProtectedRoute Debug:', {
-  //   pathname,
-  //   hasNextAuthSession,
-  //   hasCustomToken,
-  //   isUserAuthenticated,
-  //   sessionStatus: status,
-  //   tokenLoading,
-  //   session: !!session
-  // });
+  // Handle hydration
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
+
+  // Debug logging (only in development)
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development' && hasHydrated) {
+      console.log('ProtectedRoute Debug:', {
+        pathname,
+        hasNextAuthSession,
+        hasCustomToken,
+        isUserAuthenticated,
+        sessionStatus: status,
+        tokenLoading,
+        hasHydrated,
+        isRedirecting,
+      });
+    }
+  }, [
+    pathname,
+    hasNextAuthSession,
+    hasCustomToken,
+    isUserAuthenticated,
+    status,
+    tokenLoading,
+    hasHydrated,
+    isRedirecting,
+  ]);
 
   useEffect(() => {
+    // Don't do anything until hydrated
+    if (!hasHydrated) return;
+    
     // Don't redirect if still loading
     if (tokenLoading || status === "loading" || isRedirecting) {
       return;
@@ -60,7 +80,7 @@ export function ProtectedRoute({
 
     // Handle auth routes (signin, signup)
     if (isAuthRoute && isUserAuthenticated) {
-      console.log('Redirecting from auth route to home');
+      console.log('ProtectedRoute: Redirecting from auth route to home');
       setIsRedirecting(true);
       router.push("/");
       return;
@@ -68,13 +88,14 @@ export function ProtectedRoute({
 
     // Handle protected routes
     if (isProtectedRoute && !isUserAuthenticated) {
-      console.log('Redirecting from protected route to signin');
+      console.log('ProtectedRoute: Redirecting from protected route to signin');
       setIsRedirecting(true);
       router.push(redirectTo);
       return;
     }
 
   }, [
+    hasHydrated,
     status,
     tokenLoading,
     isUserAuthenticated,
@@ -90,11 +111,13 @@ export function ProtectedRoute({
 
   // Reset redirecting state when pathname changes
   useEffect(() => {
-    setIsRedirecting(false);
-  }, [pathname]);
+    if (hasHydrated) {
+      setIsRedirecting(false);
+    }
+  }, [pathname, hasHydrated]);
 
-  // Show loading state while loading or redirecting
-  if (tokenLoading || status === "loading" || isRedirecting) {
+  // Show loading state while not hydrated or while loading or redirecting
+  if (!hasHydrated || tokenLoading || status === "loading" || isRedirecting) {
     return <>{fallback}</>;
   }
 

@@ -1,3 +1,4 @@
+// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
@@ -25,12 +26,18 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    // Get the NextAuth session token
+    const isProduction = process.env.NODE_ENV === "production";
+    
+    // Get the NextAuth session token with correct cookie name
     const token = await getToken({
       req: request,
       secret: process.env.NEXTAUTH_SECRET,
+      cookieName: isProduction 
+        ? "__Secure-next-auth.session-token"
+        : "next-auth.session-token",
     });
 
+    // Check custom tokens
     const accessToken = request.cookies.get("access_token")?.value;
     const tokenExpires = request.cookies.get("token_expires")?.value;
 
@@ -47,50 +54,50 @@ export async function middleware(request: NextRequest) {
       return !isTokenExpired(tokenExpires);
     };
 
-    // Check if user is authenticated via NextAuth (Google, etc.)
+    // Check authentication status
     const hasNextAuthSession = !!token;
-    
-    // Check if user is authenticated via custom token (manual login)
     const hasCustomToken = isCustomTokenValid();
-
-    // User is authenticated if they have EITHER NextAuth session OR valid custom token
     const isAuthenticated = hasNextAuthSession || hasCustomToken;
 
-    // console.log('Middleware Debug:', {
-    //   pathname,
-    //   hasNextAuthSession,
-    //   hasCustomToken,
-    //   isAuthenticated,
-    //   tokenExists: !!token,
-    //   accessTokenExists: !!accessToken
-    // });
+    // Debug logging (only in development)
+    if (!isProduction) {
+      console.log('Middleware Debug:', {
+        pathname,
+        hasNextAuthSession,
+        hasCustomToken,
+        isAuthenticated,
+        tokenExists: !!token,
+        accessTokenExists: !!accessToken,
+        cookieName: isProduction ? "__Secure-next-auth.session-token" : "next-auth.session-token",
+        environment: process.env.NODE_ENV,
+      });
+    }
 
     // Redirect logic for auth routes
     if (isAuthRoute) {
       if (isAuthenticated) {
-        // User is signed in and trying to access auth routes
+        console.log('Middleware: Redirecting authenticated user from auth route');
         return NextResponse.redirect(new URL("/", request.url));
       }
-      // Allow access to auth routes if not signed in
       return NextResponse.next();
     }
 
     // Redirect logic for protected routes
     if (isProtectedRoute) {
       if (!isAuthenticated) {
-        // No token, redirect to signin
+        console.log('Middleware: Redirecting unauthenticated user from protected route');
         return NextResponse.redirect(new URL("/signin", request.url));
       }
-      // Has token, allow access to protected route
       return NextResponse.next();
     }
 
-    // For all other routes (including home "/"), allow access
+    // For all other routes, allow access
     return NextResponse.next();
     
   } catch (error) {
     console.error("Middleware error:", error);
-    // If there's an error checking auth, allow access to non-protected routes
+    
+    // Graceful degradation
     if (isProtectedRoute) {
       return NextResponse.redirect(new URL("/signin", request.url));
     }
